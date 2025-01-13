@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package message;
+
+option go_package = "internal/message/proto;message";
+
+service MessageService {
+  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
+}
+
+message GetMessageRequest {
+  string id = 1;
+}
+
+message GetMessageResponse {
+  string message = 1;
+}

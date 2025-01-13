@@ -1,2 +1,2 @@
 run:
-	go run services/$(service)/cmd/main.go
+	go run cmd/$(service)/main.go
