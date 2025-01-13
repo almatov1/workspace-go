@@ -12,5 +12,5 @@ type MessageHandler struct {
 }
 
 func (h *MessageHandler) GetMessage(ctx context.Context, req *pb.GetMessageRequest) (*pb.GetMessageResponse, error) {
-	return h.MessageService.GetMessage(req)
+	return h.MessageService.GetMessage(ctx, req)
 }
