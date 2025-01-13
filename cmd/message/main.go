@@ -1,9 +1,9 @@
 package main
 
 import (
-	"workspace-go/internal/message/routes"
+	"workspace-go/internal/message/server"
 )
 
 func main() {
-	routes.RunGRPCServer()
+	server.RunGRPCServer()
 }
