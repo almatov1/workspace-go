@@ -3,15 +3,14 @@ package handlers
 import (
 	"context"
 	pb "workspace-go/internal/message/proto"
+	"workspace-go/internal/message/services"
 )
 
 type MessageHandler struct {
-	pb.UnimplementedMessageServiceServer
+	pb.UnimplementedMessageServiceServer 
+	MessageService *services.MessageService
 }
 
 func (h *MessageHandler) GetMessage(ctx context.Context, req *pb.GetMessageRequest) (*pb.GetMessageResponse, error) {
-	response := &pb.GetMessageResponse{
-		Message: "Сообщение с ID: " + req.Id,
-	}
-	return response, nil
+	return h.MessageService.GetMessage(req)
 }
