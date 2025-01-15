@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"workspace-go/internal/notification/telegram"
 
 	"github.com/joho/godotenv"
 	"github.com/streadway/amqp"
@@ -56,11 +57,12 @@ func GetMessage(queueName string) error {
 		nil,       // Дополнительные аргументы
 	)
 	if err != nil {
-        return fmt.Errorf("Ошибка подключения к очереди: %v", err)
+        return fmt.Errorf("ошибка подключения к очереди: %v", err)
     }
 
     for msg := range msgs {
         log.Printf("Получено сообщение: %s", string(msg.Body))
+		telegram.SendMessage(string(msg.Body))
     }
 	
 	return nil
