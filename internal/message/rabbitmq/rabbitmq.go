@@ -60,6 +60,7 @@ func SendMessage(queueName, message string) error {
 		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        []byte(message),
+			DeliveryMode: amqp.Persistent,
 		},
 	)
 	if err != nil {
