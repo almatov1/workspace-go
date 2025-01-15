@@ -5,6 +5,7 @@ import (
 	"workspace-go/internal/message/database"
 	"workspace-go/internal/message/models"
 	pb "workspace-go/internal/message/proto"
+	"workspace-go/internal/message/websocket"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
@@ -24,6 +25,9 @@ func (s *MessageService) InsertMessage(ctx context.Context, req *pb.InsertMessag
     if err != nil {
         return nil, status.Errorf(codes.Internal, "Не удалось вставить сообщение в базу данных: %v", err)
     }
+
+	// send message to broadcast
+	websocket.Broadcast <- req.Message
 
     insertedID := result.InsertedID.(primitive.ObjectID)
     return &pb.InsertMessageResponse{
