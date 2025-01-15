@@ -1,10 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"workspace-go/internal/notification/rabbitmq"
+	"workspace-go/internal/notification/services"
 )
 
 func main() {
-	var name string = "Notification microservice not created"
-	fmt.Println(name)
+	err := rabbitmq.Initialize()
+	if err != nil {
+		log.Fatal("Ошибка инициализации RabbitMQ:", err)
+	}
+	defer rabbitmq.Close()
+
+	services.StartListening();
+	select {}
 }

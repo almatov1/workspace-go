@@ -37,5 +37,5 @@ func ConnectMongoDB() {
     if err != nil {
         log.Fatalf("Ошибка пинга MongoDB: %v", err)
     }
-    fmt.Println("Успешно подключено к MongoDB")
+    log.Println("Успешно подключено к MongoDB")
 }
