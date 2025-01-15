@@ -5,13 +5,14 @@ package message;
 option go_package = "internal/message/proto;message";
 
 service MessageService {
-  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
+  rpc InsertMessage (InsertMessageRequest) returns (InsertMessageResponse);
 }
 
-message GetMessageRequest {
-  string id = 1;
-}
-
-message GetMessageResponse {
+message InsertMessageRequest {
   string message = 1;
+}
+
+message InsertMessageResponse {
+  string id = 1;
+  string message = 2;
 }

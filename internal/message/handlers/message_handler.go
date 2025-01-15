@@ -11,6 +11,6 @@ type MessageHandler struct {
 	MessageService *services.MessageService
 }
 
-func (h *MessageHandler) GetMessage(ctx context.Context, req *pb.GetMessageRequest) (*pb.GetMessageResponse, error) {
-	return h.MessageService.GetMessage(ctx, req)
+func (h *MessageHandler) InsertMessage(ctx context.Context, req *pb.InsertMessageRequest) (*pb.InsertMessageResponse, error) {
+	return h.MessageService.InsertMessage(ctx, req)
 }

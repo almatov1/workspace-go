@@ -13,10 +13,10 @@ import (
 
 type MessageService struct{}
 
-func (s *MessageService) GetMessage(ctx context.Context, req *pb.GetMessageRequest) (*pb.GetMessageResponse, error) {	
+func (s *MessageService) InsertMessage(ctx context.Context, req *pb.InsertMessageRequest) (*pb.InsertMessageResponse, error) {	
 	// write record
 	message := models.Message{
-		Content: req.Id,
+		Message: req.Message,
 	}
 
 	collection := database.Client.Database("messages_db").Collection("messages")
@@ -26,7 +26,8 @@ func (s *MessageService) GetMessage(ctx context.Context, req *pb.GetMessageReque
     }
 
     insertedID := result.InsertedID.(primitive.ObjectID)
-    return &pb.GetMessageResponse{
-        Message: "Сообщение с ID: " + insertedID.Hex(),
+    return &pb.InsertMessageResponse{
+		Id: insertedID.Hex(),
+        Message: req.Message,
     }, nil
 }
