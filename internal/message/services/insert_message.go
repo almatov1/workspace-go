@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
-	"workspace-go/configs"
+	configs "workspace-go/configs/message"
 	"workspace-go/internal/message/database"
 	"workspace-go/internal/message/models"
 	pb "workspace-go/internal/message/proto"
