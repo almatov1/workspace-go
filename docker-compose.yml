@@ -25,11 +25,21 @@ services:
       - "${RABBITMQ_AMQP_PORT}:${RABBITMQ_AMQP_PORT}"
     networks:
       - rabbitmq-net
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - redis-data:/data
 
 volumes:
   mongodb_data:
     driver: local
   rabbitmq_data:
+    driver: local
+  redis-data:
     driver: local
 
 networks:

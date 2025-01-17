@@ -6,6 +6,7 @@ option go_package = "internal/message/proto;message";
 
 service MessageService {
   rpc InsertMessage (InsertMessageRequest) returns (InsertMessageResponse);
+  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
 }
 
 message InsertMessageRequest {
@@ -13,6 +14,20 @@ message InsertMessageRequest {
 }
 
 message InsertMessageResponse {
+  string id = 1;
+  string message = 2;
+}
+
+message GetMessageRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message GetMessageResponse {
+  repeated Message messages = 1;
+}
+
+message Message {
   string id = 1;
   string message = 2;
 }

@@ -8,9 +8,14 @@ import (
 
 type MessageHandler struct {
 	pb.UnimplementedMessageServiceServer 
-	MessageService *services.MessageService
+	InsertMessageService *services.InsertMessageImpl
+	GetMessageService *services.GetMessageImpl
 }
 
 func (h *MessageHandler) InsertMessage(ctx context.Context, req *pb.InsertMessageRequest) (*pb.InsertMessageResponse, error) {
-	return h.MessageService.InsertMessage(ctx, req)
+	return h.InsertMessageService.InsertMessage(ctx, req)
+}
+
+func (h *MessageHandler) GetMessage(ctx context.Context, req *pb.GetMessageRequest) (*pb.GetMessageResponse, error) {
+	return h.GetMessageService.GetMessage(ctx, req)
 }

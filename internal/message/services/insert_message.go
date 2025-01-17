@@ -4,10 +4,12 @@ import (
 	"context"
 	"log"
 	"os"
+	"workspace-go/configs"
 	"workspace-go/internal/message/database"
 	"workspace-go/internal/message/models"
 	pb "workspace-go/internal/message/proto"
 	"workspace-go/internal/message/rabbitmq"
+	"workspace-go/internal/message/redis"
 	"workspace-go/internal/message/websocket"
 
 	"github.com/joho/godotenv"
@@ -16,15 +18,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type MessageService struct{}
+type InsertMessageImpl struct{}
 
-func (s *MessageService) InsertMessage(ctx context.Context, req *pb.InsertMessageRequest) (*pb.InsertMessageResponse, error) {	
+func (s *InsertMessageImpl) InsertMessage(ctx context.Context, req *pb.InsertMessageRequest) (*pb.InsertMessageResponse, error) {	
 	// write record
 	message := models.Message{
 		Message: req.Message,
 	}
 
-	collection := database.Client.Database("messages_db").Collection("messages")
+	collection := database.Client.Database(configs.DBName).Collection(configs.MessageCollectionName)
     result, err := collection.InsertOne(ctx, message)
     if err != nil {
         return nil, status.Errorf(codes.Internal, "Не удалось вставить сообщение в базу данных: %v", err)
@@ -42,6 +44,12 @@ func (s *MessageService) InsertMessage(ctx context.Context, req *pb.InsertMessag
 	err = rabbitmq.SendMessage(queueName, req.Message)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Не удалось отправить сообщение в RabbitMQ: %v", err)
+	}
+
+	// reset redis
+	err = redis.RedisClient.Del(ctx, "first_page").Err()
+	if err != nil {
+		log.Printf("Ошибка при удалении кэша Redis: %v", err)
 	}
 
     insertedID := result.InsertedID.(primitive.ObjectID)

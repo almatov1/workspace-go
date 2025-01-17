@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	MessageService_InsertMessage_FullMethodName = "/message.MessageService/InsertMessage"
+	MessageService_GetMessage_FullMethodName    = "/message.MessageService/GetMessage"
 )
 
 // MessageServiceClient is the client API for MessageService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
 	InsertMessage(ctx context.Context, in *InsertMessageRequest, opts ...grpc.CallOption) (*InsertMessageResponse, error)
+	GetMessage(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
 }
 
 type messageServiceClient struct {
@@ -47,11 +49,22 @@ func (c *messageServiceClient) InsertMessage(ctx context.Context, in *InsertMess
 	return out, nil
 }
 
+func (c *messageServiceClient) GetMessage(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMessageResponse)
+	err := c.cc.Invoke(ctx, MessageService_GetMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility.
 type MessageServiceServer interface {
 	InsertMessage(context.Context, *InsertMessageRequest) (*InsertMessageResponse, error)
+	GetMessage(context.Context, *GetMessageRequest) (*GetMessageResponse, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedMessageServiceServer struct{}
 
 func (UnimplementedMessageServiceServer) InsertMessage(context.Context, *InsertMessageRequest) (*InsertMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InsertMessage not implemented")
+}
+func (UnimplementedMessageServiceServer) GetMessage(context.Context, *GetMessageRequest) (*GetMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessage not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 func (UnimplementedMessageServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +120,24 @@ func _MessageService_InsertMessage_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_GetMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).GetMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_GetMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).GetMessage(ctx, req.(*GetMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "InsertMessage",
 			Handler:    _MessageService_InsertMessage_Handler,
+		},
+		{
+			MethodName: "GetMessage",
+			Handler:    _MessageService_GetMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
